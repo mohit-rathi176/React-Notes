@@ -1,14 +1,14 @@
 ## About React-Notes
 This is a simple application in which users can create, delete, update and read their notes.
 
-Check out the live application here: https://mern-notes-app-07.herokuapp.com
+Check out the live application here: *https://mern-notes-app-07.herokuapp.com*
 
 ## Technology Used
-Frontend: ReactJS
+**Frontend:** ReactJS
 
-Backend: NodeJS with ExpressJS
+**Backend:** NodeJS with ExpressJS
 
-Database: MongoDB
+**Database:** MongoDB
 
 ## Learnings from this project
 Basics of ReactJS (Functional components, hooks, etc.)
