@@ -9,20 +9,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const dotenv = require("dotenv");
-dotenv.config({ path: './config.env' });
-// require("dotenv/config");
+dotenv.config({ path: "./config.env" });
 
-// Connect to MongoDB
-// mongoose.connect(
-//   process.env.DB_CONNECTION,
-//   (err) => {
-//     if (err)
-//       console.log(err);
-//     else
-//       console.log("Connected to MongoDB Atlas!");
-//   }
-// );
-mongoose.connect(process.env.DB_CONNECTION)
+mongoose
+  .connect(process.env.DB_CONNECTION)
   .then(() => {
     console.log("Connected to MongoDB Atlas!");
   })
@@ -44,7 +34,7 @@ const notesRoute = require("./routes/notes");
 app.use(
   session({
     name: "auth",
-    secret: "this is my secret key",
+    secret: process.env.SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: false,
     cookie: {

@@ -39,12 +39,9 @@ const Home = () => {
 
   const deleteNote = async (id) => {
     try {
-      const response = await axios.delete(
-        `/notes/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.delete(`/notes/${id}`, {
+        withCredentials: true,
+      });
       setNotes((prevNotes) => {
         return prevNotes.filter((note) => note._id != id);
       });

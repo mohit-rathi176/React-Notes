@@ -1,60 +1,71 @@
-import { useState } from "react";
+import useInput from "../../hooks/use-input";
 
 import classes from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
 // import axios from "axios";
 import axios from "../axios/axios";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
+const isEmpty = (val) => val.trim() !== "";
 
 const Login = (props) => {
+  const {
+    value: email,
+    isValid: emailIsValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: resetEmail,
+  } = useInput(isEmpty);
 
-	let navigate = useNavigate();
+  const {
+    value: password,
+    isValid: passwordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    reset: resetPassword,
+  } = useInput(isEmpty);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const formIsValid = emailIsValid && passwordIsValid;
 
-	const emailChangeHandler = (event) => {
-		setEmail(event.target.value);
-	};
+  let navigate = useNavigate();
 
-	const passwordChangeHandler = (event) => {
-		setPassword(event.target.value);
-	};
+  const loginUser = async () => {
+    const user = {
+      email: email,
+      password: password,
+    };
 
-	const loginUser = async () => {
-		const user = {
-			email: email,
-			password: password
-		};
+    try {
+      const response = await axios.post("/auth/login", user, {
+        withCredentials: true,
+      });
+      toast.dismiss();
+      toast.success(response.data.success, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      resetEmail();
+      resetPassword();
+      return true;
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error.response.data.error, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      return false;
+    }
+  };
 
-		try {
-			const response = await axios.post("/auth/login", user, { withCredentials: true });
-			toast.dismiss();
-			toast.success(response.data.success, {
-				position: toast.POSITION.BOTTOM_RIGHT
-			});
-			setEmail("");
-			setPassword("");
-			return true;
-		}
-		catch (error) {
-			toast.dismiss();
-			toast.error(error.response.data.error, {
-				position: toast.POSITION.BOTTOM_RIGHT
-			});
-			return false;
-		}
-	};
+  const loginHandler = async (event) => {
+    event.preventDefault();
 
-	const loginHandler = async (event) => {
-		event.preventDefault();
-		const isLegit = await loginUser();
-		if (isLegit)
-		{
-			props.login();
-			navigate("/home", { replace: true });
-		}
+    const isLegit = await loginUser();
+    if (isLegit) {
+      props.login();
+      navigate("/home", { replace: true });
+    }
   };
 
   return (
@@ -62,14 +73,30 @@ const Login = (props) => {
       <form onSubmit={loginHandler}>
         <div className={classes["input-group"]}>
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" value={email} onChange={emailChangeHandler} />
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={emailChangeHandler}
+            onBlur={emailBlurHandler}
+          />
+          {emailHasError && <p>Please enter a valid email</p>}
         </div>
         <div className={classes["input-group"]}>
           <label htmlFor="password">Password</label>
-          <input type="password" id="password" value={password} onChange={passwordChangeHandler} />
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={passwordChangeHandler}
+            onBlur={passwordBlurHandler}
+          />
+          {passwordHasError && <p>Please enter a valid password</p>}
         </div>
         <div className={classes.actions}>
-          <button>Login</button>
+          <button type="submit" disabled={!formIsValid}>
+            Login
+          </button>
         </div>
       </form>
     </section>

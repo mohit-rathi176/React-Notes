@@ -10,14 +10,11 @@ const PrivateRoute = (props) => {
   useEffect(() => {
     async function checkAuthentication() {
       try {
-        const response = await axios.get(
-          "/auth/isauthenticated",
-          { withCredentials: true }
-        );
-        if (response.data.auth)
-          setIsAuth(true);
-        else
-          setIsAuth(false);
+        const response = await axios.get("/auth/isauthenticated", {
+          withCredentials: true,
+        });
+        if (response.data.auth) setIsAuth(true);
+        else setIsAuth(false);
       } catch (error) {
         setIsAuth(false);
       }
@@ -28,7 +25,8 @@ const PrivateRoute = (props) => {
   return (
     <>
       {isAuth === undefined && null}
-      {isAuth !== undefined && (isAuth ? props.children : <Navigate to="/login" />)}
+      {isAuth !== undefined &&
+        (isAuth ? props.children : <Navigate to="/login" />)}
     </>
   );
 };

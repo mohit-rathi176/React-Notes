@@ -1,4 +1,14 @@
 .section {
-  height: calc(100vh - 80px);
-  overflow: auto;
+	height: calc(100vh - 71.2px);
+	overflow-y: auto;
+	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
+}
+
+@media only screen and (max-width: 600px) {
+
+	.section {
+		height: calc(100vh - 120.80px);
+	}
+
 }
